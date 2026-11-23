@@ -109,6 +109,9 @@ export default function Part1Study() {
             {showKo && <p className="ko-block">{p.ko}</p>}
             <div className="btn-row">
               <SpeakButton text={p.en} label="모범 낭독 듣기" />
+              <Link className="btn sm outline" to={`/study/shadow?src=p1-${p.id}`}>
+                🗣 따라 말하기
+              </Link>
               <Link className="btn sm outline" to={`/practice/run/p1?item=${p.id}`}>
                 🎙 45초 실전 연습
               </Link>

@@ -17,6 +17,15 @@ export default function PracticeHome() {
         </p>
       </Link>
 
+      <div className="btn-row">
+        <Link to="/stats" className="btn outline sm">
+          📊 학습 분석
+        </Link>
+        <Link to="/study/shadow" className="btn outline sm">
+          🗣 따라 말하기
+        </Link>
+      </div>
+
       <Section title="파트별 연습">
         <div className="grid">
           {PARTS.map((p) => (

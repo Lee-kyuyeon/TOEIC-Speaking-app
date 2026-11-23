@@ -616,3 +616,98 @@ details.card[open] summary::after {
 details.card[open] summary {
   margin-bottom: 8px;
 }
+
+/* shadowing */
+.w-ok {
+  color: var(--ok);
+}
+.w-miss {
+  color: var(--accent);
+  text-decoration: underline wavy;
+  text-underline-offset: 4px;
+}
+.live {
+  background: var(--surface-2);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 0.92rem;
+  margin: 12px 0 0;
+}
+.score {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--surface-2);
+}
+.score b {
+  white-space: nowrap;
+  font-size: 1.6rem;
+  font-variant-numeric: tabular-nums;
+}
+.score.good b {
+  color: var(--ok);
+}
+.score.mid b {
+  color: var(--warn-ink);
+}
+.score.low b {
+  color: var(--accent);
+}
+
+/* hints */
+.hint {
+  background: var(--warn-bg);
+  color: var(--warn-ink);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 0.9rem;
+  margin: 12px 0;
+}
+.hint ul {
+  margin: 4px 0 0;
+  padding-left: 18px;
+}
+
+/* bars (stats) */
+.bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 80px;
+}
+.bars > div {
+  flex: 1;
+  background: var(--primary);
+  border-radius: 3px 3px 0 0;
+  min-height: 2px;
+}
+.bars > div.zero {
+  background: var(--border);
+}
+.bar-labels {
+  display: flex;
+  gap: 4px;
+  font-size: 0.65rem;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.bar-labels span {
+  flex: 1;
+  text-align: center;
+  white-space: nowrap;
+  overflow: visible;
+}
+td.nowrap,
+th.nowrap {
+  white-space: nowrap;
+}
+.daily li label {
+  align-items: center;
+}
+.daily a {
+  text-decoration: none;
+  color: inherit;
+}

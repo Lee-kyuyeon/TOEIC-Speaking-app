@@ -31,6 +31,13 @@ export default function StudyIndex() {
             </Link>
           )
         })}
+        <Link to="/study/shadow" className="card link-card">
+          <div className="kicker">음성 인식 피드백</div>
+          <h3>따라 말하기</h3>
+          <p className="muted small" style={{ margin: 0 }}>
+            지문·묘사 문장·만능 답변을 듣고 따라 말하면 놓친 단어를 표시
+          </p>
+        </Link>
         <Link to="/study/cards" className="card link-card">
           <div className="kicker">필수 문장 암기</div>
           <h3>암기 카드</h3>

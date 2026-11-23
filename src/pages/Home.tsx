@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import { useDone, useHistory, useStored } from '../lib/storage'
+import { todayKey, useDone, useHistory, useStored } from '../lib/storage'
+import { buildDailyPlan, isAutoDone } from '../lib/dailyPlan'
 import { dday, fmt, parseDate } from '../lib/dates'
 import { VideoButton } from '../components/ui'
 import { VIDEOS } from '../data/videos'
@@ -12,6 +13,11 @@ export default function Home() {
   const exam = parseDate(plan.examDate)
   const total = Object.values(TOTALS).reduce((a, b) => a + b, 0)
   const pct = Math.round((done.length / total) * 100)
+  const tKey = todayKey()
+  const daily = buildDailyPlan(plan, done)
+  const [checked, setChecked] = useStored<string[]>(`daily-${tKey}`, [])
+  const isTaskDone = (id: string) => checked.includes(id) || isAutoDone(daily.tasks.find((t) => t.id === id)!, history, tKey)
+  const doneCount = daily.tasks.filter((t) => isTaskDone(t.id)).length
 
   return (
     <>
@@ -46,6 +52,50 @@ export default function Home() {
 
       <section className="section">
         <div className="section-head">
+          <h2>오늘의 학습</h2>
+          <span className="muted small">
+            {daily.mode} · {doneCount}/{daily.tasks.length}
+          </span>
+        </div>
+        <div className="card daily">
+          <ul className="checklist">
+            {daily.tasks.map((t) => {
+              const ok = isTaskDone(t.id)
+              return (
+                <li key={t.id}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={ok}
+                      onChange={() => setChecked((c) => (c.includes(t.id) ? c.filter((x) => x !== t.id) : [...c, t.id]))}
+                      aria-label={`${t.title} 완료`}
+                    />
+                    <Link to={t.to} style={{ flex: 1 }}>
+                      <b className={ok ? 'done-text' : ''}>
+                        {t.part && <span className="part-badge">P{t.part}</span>}
+                        {t.title}
+                      </b>
+                      <br />
+                      <span className="muted small">{t.desc}</span>
+                    </Link>
+                    <span aria-hidden className="muted">
+                      ›
+                    </span>
+                  </label>
+                </li>
+              )
+            })}
+          </ul>
+          {!exam && (
+            <p className="muted small" style={{ marginBottom: 0 }}>
+              시험일과 목표 등급을 입력하면 남은 기간에 맞춰 플랜이 바뀌어요 (시험 7일 전부터 집중 플랜).
+            </p>
+          )}
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="section-head">
           <h2>학습 진도</h2>
           <span className="muted small">
             {done.length}/{total} · {pct}%
@@ -68,6 +118,9 @@ export default function Home() {
             <span>실전 연습 횟수</span>
           </div>
         </div>
+        <Link to="/stats" className="btn outline block" style={{ marginTop: 12 }}>
+          📊 학습 분석 보기
+        </Link>
       </section>
 
       <section className="section">
@@ -80,6 +133,13 @@ export default function Home() {
             <h3>11문항 전체 풀기</h3>
             <p className="muted small" style={{ margin: 0 }}>
               시험과 같은 준비·답변 시간, 녹음 후 모범 답안과 비교
+            </p>
+          </Link>
+          <Link to="/study/shadow" className="card link-card">
+            <div className="kicker">따라 말하기</div>
+            <h3>음성 인식 피드백</h3>
+            <p className="muted small" style={{ margin: 0 }}>
+              원어민 음성을 따라 말하면 놓친 단어를 표시
             </p>
           </Link>
           <Link to="/study/cards" className="card link-card">

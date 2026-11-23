@@ -2,11 +2,12 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import InfoTable from '../components/InfoTable'
 import { Notice, SpeakButton } from '../components/ui'
-import { part1Passages, part2Scenes, part4Sets, part5Answers, part5FirstSentence, type Part1Passage, type Part2Scene, type Part4Set } from '../data/study'
+import { part1Passages, part1Tips, part2Scenes, part2Template, part3Combos, part3QuestionTypes, part4QuestionPatterns, part4Sets, part5Answers, part5FirstSentence, part5Structure, type Part1Passage, type Part2Scene, type Part4Set } from '../data/study'
 import { part3Sets, part5Questions, type Part3Set, type Part5Question } from '../data/practice'
 import { beep } from '../lib/beep'
 import { AnswerRecorder } from '../lib/recorder'
-import { useHistory } from '../lib/storage'
+import { logActivity, useHistory, type AnswerLog } from '../lib/storage'
+import { unlockAudio } from '../lib/audioUnlock'
 import { speak, stopSpeaking } from '../lib/tts'
 
 const BASE = import.meta.env.BASE_URL
@@ -134,6 +135,7 @@ export default function PracticeRun() {
   const [narrating, setNarrating] = useState('')
   const [recordings, setRecordings] = useState<Record<string, string>>({})
   const [micOk, setMicOk] = useState<boolean | null>(null)
+  const [showHint, setShowHint] = useState(false)
 
   const recorder = useRef<AnswerRecorder | null>(null)
   const runToken = useRef(0)
@@ -170,10 +172,12 @@ export default function PracticeRun() {
   const run = async () => {
     const token = ++runToken.current
     let lastPart = 0
+    const answers: AnswerLog[] = []
     for (let i = 0; i < steps.length; i++) {
       if (!alive(token)) return
       const s = steps[i]
       setStepIdx(i)
+      setShowHint(false)
       if (s.part !== lastPart) {
         lastPart = s.part
         setPhase('directions')
@@ -202,7 +206,9 @@ export default function PracticeRun() {
         setPhase('answer')
         beep(990)
         recorder.current?.start()
+        const t0 = Date.now()
         await countdown(s.answer, token)
+        answers.push({ part: s.part, allotted: s.answer, used: Math.min(s.answer, Math.round((Date.now() - t0) / 1000)) })
         const blob = await recorder.current?.stop()
         if (blob && alive(token)) {
           const url = URL.createObjectURL(blob)
@@ -214,7 +220,8 @@ export default function PracticeRun() {
     beep(520, 600)
     setPhase('review')
     recorder.current?.close()
-    setHistory((h) => [...h.slice(-49), { at: new Date().toISOString(), mode, title, questions: steps.filter((s) => s.qno).length }])
+    logActivity()
+    setHistory((h) => [...h.slice(-49), { at: new Date().toISOString(), mode, title, item, answers, questions: steps.filter((s) => s.qno).length }])
   }
 
   const waitSkip = (token: number) =>
@@ -228,6 +235,7 @@ export default function PracticeRun() {
     })
 
   const start = async () => {
+    unlockAudio() // iOS: 탭한 순간에 오디오·음성 합성을 깨워 둔다
     const rec = new AnswerRecorder()
     const ok = await rec.open()
     recorder.current = ok ? rec : null
@@ -353,9 +361,15 @@ export default function PracticeRun() {
           </div>
         </div>
       )}
+      {showHint && (phase === 'prep' || phase === 'answer') && <Hint step={step} />}
       {(phase === 'directions' || phase === 'narrate') && <div className="timer"><span className="t-phase">🔊 음성 안내 중…</span></div>}
 
       <div className="btn-row">
+        {(phase === 'prep' || phase === 'answer') && (
+          <button className="btn outline sm" onClick={() => setShowHint((h) => !h)} aria-expanded={showHint}>
+            💡 {showHint ? '힌트 닫기' : '힌트'}
+          </button>
+        )}
         <button className="btn outline sm" onClick={() => (skipFlag.current = true)}>
           {phase === 'answer' ? '답변 끝내기 →' : '건너뛰기 →'}
         </button>
@@ -480,4 +494,77 @@ function ModelAnswer({ step }: { step: Step }) {
       )
     }
   }
+}
+
+/** 실전 중 막힐 때 보는 힌트 — 교재의 템플릿·공식 (토스트의 '실전 연습 힌트' 벤치마킹) */
+function Hint({ step }: { step: Step }) {
+  const v = step.view
+  let title = ''
+  let items: string[] = []
+  switch (v.kind) {
+    case 'p1':
+      title = 'Part 1 읽기 요령'
+      items = part1Tips
+      break
+    case 'p2':
+      title = '그림 묘사 템플릿'
+      items = part2Template.map((t) => `${t.step}: ${t.en}`)
+      break
+    case 'p3': {
+      const q = v.set.questions[v.qi].toLowerCase()
+      // 질문에 들어 있는 유형 키워드 중 가장 긴(구체적인) 것을 고른다 (예: 'when was the last time' > 'when')
+      let type: (typeof part3QuestionTypes)[number] | undefined
+      let best = 0
+      for (const t of part3QuestionTypes) {
+        for (const k of t.type
+          .toLowerCase()
+          .split(/[/(),?~]/)
+          .map((x) => x.replace(/[^a-z ]/g, '').trim())
+          .filter((x) => x.length > 2)) {
+          if (q.includes(k) && k.length > best) {
+            best = k.length
+            type = t
+          }
+        }
+      }
+      title = type ? `질문 유형: ${type.type}` : 'Part 3 답변 공식'
+      items = [
+        ...(type ? [`어순: ${type.pattern}`, `예) ${type.answer}`] : []),
+        v.qi === 2 ? 'Q7(30초): 입장 → 이유(Because ~) → 만능 콤보 → 예시' : '첫 문장은 질문을 그대로 살려 완전한 문장으로',
+        `만능 콤보: ${part3Combos.map((c) => c.key).join(' / ')}`,
+        part3Combos[0].en,
+      ]
+      break
+    }
+    case 'p4': {
+      title = v.qi === null ? '표 읽기 요령' : `Q${8 + v.qi} 답변 요령`
+      items =
+        v.qi === null
+          ? ['제목·날짜·장소·가격·메모(*, 괄호)를 먼저 확인', '변경·취소(moved, canceled)와 추가 요금 표시는 Q9 단골', 'Q10은 같은 종류(세션, 면접, 투어)를 묶어서 찾아 두기']
+          : [part4QuestionPatterns[v.qi].desc, ...part4QuestionPatterns[v.qi].examples.slice(0, 2), v.qi === 2 ? 'Sure thing. There are two ___ scheduled. Firstly, ~ Secondly, ~' : 'From 시간 to 시간, there will be ~ / Please note that ~']
+      break
+    }
+    case 'p5': {
+      const key = ({ 장점: '장단점', '자질 선택': '선호' } as Record<string, string>)[v.q.type] ?? v.q.type
+      const first = part5FirstSentence.find((f) => f.type.startsWith(key))
+      const a = part5Answers.find((x) => x.id === v.q.answerId)
+      title = `Part 5 · ${v.q.type} 유형`
+      items = [
+        ...(first ? [`첫 문장: ${first.start}`] : []),
+        ...part5Structure.map((p) => `${p.step} ${p.desc}`),
+        ...(a ? [`만능 답변 ${String(a.id).padStart(2, '0')}: ${a.en.split('. ')[0]}.`] : []),
+      ]
+      break
+    }
+  }
+  return (
+    <div className="hint" role="note">
+      <b>💡 {title}</b>
+      <ul>
+        {items.map((x) => (
+          <li key={x}>{x}</li>
+        ))}
+      </ul>
+    </div>
+  )
 }

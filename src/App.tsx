@@ -12,6 +12,8 @@ import Part5Study from './pages/Part5Study'
 import Flashcards from './pages/Flashcards'
 import PracticeHome from './pages/PracticeHome'
 import PracticeRun from './pages/PracticeRun'
+import Shadow from './pages/Shadow'
+import Stats from './pages/Stats'
 
 export default function App() {
   return (
@@ -27,6 +29,8 @@ export default function App() {
         <Route path="study/part4" element={<Part4Study />} />
         <Route path="study/part5" element={<Part5Study />} />
         <Route path="study/cards" element={<Flashcards />} />
+        <Route path="study/shadow" element={<Shadow />} />
+        <Route path="stats" element={<Stats />} />
         <Route path="practice" element={<PracticeHome />} />
         <Route path="practice/run/:mode" element={<PracticeRoute />} />
         <Route path="*" element={<Home />} />
