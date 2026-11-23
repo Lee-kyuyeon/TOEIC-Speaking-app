@@ -1,3 +1,4 @@
+/* 라이트 모드 고정 (기기가 다크 모드여도 밝은 화면) */
 :root {
   --bg: #f6f7f4;
   --surface: #ffffff;
@@ -18,29 +19,6 @@
   --shadow: 0 1px 2px rgb(0 0 0 / 0.05), 0 4px 16px rgb(0 0 0 / 0.04);
   --radius: 14px;
   color-scheme: light;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    --bg: #131611;
-    --surface: #1b1f18;
-    --surface-2: #242a20;
-    --text: #e8ece3;
-    --muted: #a2ab9b;
-    --border: #323a2d;
-    --primary: #7fc28a;
-    --primary-ink: #0f1a10;
-    --primary-soft: #23352a;
-    --accent: #f08a68;
-    --accent-soft: #3a241c;
-    --ok: #7fc28a;
-    --warn-bg: #3a3018;
-    --warn-ink: #f1d58f;
-    --info-bg: #1c2a3d;
-    --info-ink: #b8d1f2;
-    --shadow: none;
-    color-scheme: dark;
-  }
 }
 
 * {

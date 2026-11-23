@@ -94,3 +94,12 @@ export function VideoButton({ video }: { video: { title: string; url: string; pa
     </a>
   )
 }
+
+/** 학습 화면 맨 위 교재 파트 소개 */
+export function PartIntro({ text }: { text: string }) {
+  return (
+    <div className="card" style={{ background: 'var(--primary-soft)', borderColor: 'transparent' }}>
+      <p style={{ margin: 0 }}>{text}</p>
+    </div>
+  )
+}

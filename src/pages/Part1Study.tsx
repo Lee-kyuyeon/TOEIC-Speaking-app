@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { DoneButton, PageHeader, Section, SpeakButton, Toggle, VideoButton } from '../components/ui'
+import { DoneButton, PageHeader, Section, SpeakButton, Toggle, VideoButton, PartIntro } from '../components/ui'
+import { PARTS } from '../data/exam'
 import { VIDEOS } from '../data/videos'
 import { loanWords, minimalPairs, part1Passages, part1Tips, sameRootWords } from '../data/study'
 import { useDone } from '../lib/storage'
@@ -18,6 +19,7 @@ export default function Part1Study() {
   return (
     <>
       <PageHeader title="Part 1 · 지문 크게 읽기" sub="준비 45초 · 답변 45초 · 발음, 억양, 강세 평가" back="/study" />
+      <PartIntro text={PARTS.find((x) => x.part === 1)!.bookIntro} />
 
       <Section title="읽기 요령">
         <div className="card">

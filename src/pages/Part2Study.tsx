@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { DoneButton, PageHeader, PairLine, Section, Toggle, VideoButton } from '../components/ui'
+import { DoneButton, PageHeader, PairLine, Section, Toggle, VideoButton, PartIntro } from '../components/ui'
+import { PARTS } from '../data/exam'
 import { VIDEOS } from '../data/videos'
 import { part2Expressions, part2Extra, part2Intro, part2Positions, part2Scenes, part2Template } from '../data/study'
 import { useDone } from '../lib/storage'
@@ -14,6 +15,7 @@ export default function Part2Study() {
   return (
     <>
       <PageHeader title="Part 2 · 사진 묘사하기" sub="사진 2장 · 각 준비 45초 · 답변 30초" back="/study" />
+      <PartIntro text={PARTS.find((x) => x.part === 2)!.bookIntro} />
 
       <Section title="그림 묘사 템플릿">
         <div className="card">

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { DoneButton, PageHeader, Section, SpeakButton, Toggle, VideoButton } from '../components/ui'
+import { DoneButton, PageHeader, Section, SpeakButton, Toggle, VideoButton, PartIntro } from '../components/ui'
+import { PARTS } from '../data/exam'
 import { VIDEOS } from '../data/videos'
 import { part5Answers, part5FirstSentence, part5Structure } from '../data/study'
 import { part5Questions } from '../data/practice'
@@ -12,6 +13,7 @@ export default function Part5Study() {
   return (
     <>
       <PageHeader title="Part 5 · 의견 제시하기" sub="준비 45초 · 답변 60초" back="/study" />
+      <PartIntro text={PARTS.find((x) => x.part === 5)!.bookIntro} />
 
       <Section title="첫 문장 대답하기 스킬">
         <div className="btn-row" style={{ marginTop: 0, marginBottom: 12 }}>

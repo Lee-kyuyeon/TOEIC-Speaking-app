@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { PageHeader, Section, Notice, VideoButton } from '../components/ui'
 import { VIDEOS } from '../data/videos'
-import { CHANGES_2022, EXAM_FACTS, EXAM_RULES, LEVELS, LEVEL_DESCRIPTIONS, OFFICIAL_LINKS, PARTS } from '../data/exam'
+import { CHANGES_2022, EXAM_FACTS, EXAM_INTRO, SCORE_CHANGE, EXAM_RULES, LEVELS, LEVEL_DESCRIPTIONS, OFFICIAL_LINKS, PARTS } from '../data/exam'
 
 export default function ExamInfo() {
   return (
@@ -15,6 +15,15 @@ export default function ExamInfo() {
         </a>
         을 꼭 확인하세요.
       </Notice>
+
+      <Section title="토익스피킹은 어떤 시험인가요?">
+        {EXAM_INTRO.map((x) => (
+          <div key={x.title} className="card">
+            <h3>{x.title}</h3>
+            <p style={{ margin: 0 }}>{x.text}</p>
+          </div>
+        ))}
+      </Section>
 
       <Section title="시험 개요">
         <div className="card">
@@ -132,6 +141,14 @@ export default function ExamInfo() {
             </tbody>
           </table>
         </div>
+        <p className="small">{SCORE_CHANGE}</p>
+        <details className="card">
+          <summary>TOEIC Speaking vs OPIc 등급 비교</summary>
+          <img className="figure" src={import.meta.env.BASE_URL + 'book/misc/levels.png'} alt="TOEIC Speaking과 OPIc 등급 비교표" loading="lazy" />
+          <p className="muted small" style={{ marginBottom: 0 }}>
+            출처: 토익스피킹 공식 홈페이지 (교재 7쪽)
+          </p>
+        </details>
         <p className="muted small">점수 구간은 일반적으로 알려진 참고값입니다. 정확한 환산 기준은 공식 사이트에서 확인하세요.</p>
         {LEVEL_DESCRIPTIONS.map((d) => (
           <div key={d.title} className="card">

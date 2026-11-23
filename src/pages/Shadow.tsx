@@ -85,11 +85,21 @@ export default function Shadow() {
     setScores({})
   }, [srcKey])
 
+  // 문장·지문이 바뀌면 진행 중인 인식/녹음을 멈춰, 이전 문장 발화가 새 문장으로 채점되지 않게 한다
+  const lineRef = useRef(line.en)
+  lineRef.current = line.en
   useEffect(() => {
+    listener.current?.stop()
+    listener.current = null
+    void recorder.current?.stop()
+    setListening(false)
     setResult(null)
     setLive('')
     setError('')
-    setRecUrl('')
+    setRecUrl((u) => {
+      if (u) URL.revokeObjectURL(u)
+      return ''
+    })
   }, [idx, srcKey])
 
   useEffect(
@@ -108,7 +118,8 @@ export default function Shadow() {
     await speak(line.en, slow ? 0.75 : 0.95)
   }
 
-  const finish = (text: string, err?: string) => {
+  const finish = (target: string) => (text: string, err?: string) => {
+    if (target !== lineRef.current) return // 다른 문장으로 넘어간 뒤 도착한 결과는 무시
     setListening(false)
     listener.current = null
     if (err && err !== 'no-speech' && err !== 'aborted') {
@@ -118,7 +129,7 @@ export default function Shadow() {
       if (!err || err === 'no-speech') setError('목소리를 듣지 못했어요. 다시 한 번 또박또박 말해 보세요.')
       return
     }
-    const r = compare(line.en, text)
+    const r = compare(target, text)
     setResult(r)
     setScores((s) => ({ ...s, [idx]: Math.max(s[idx] ?? 0, r.accuracy) }))
     setLog((l) => [...l.slice(-499), { at: new Date().toISOString(), src: source.key, part: source.part, accuracy: r.accuracy }])
@@ -135,7 +146,7 @@ export default function Shadow() {
     setError('')
     setLive('')
     if (supported) {
-      const l = listen(setLive, finish)
+      const l = listen(setLive, finish(line.en))
       if (!l) {
         setError('음성 인식을 시작하지 못했어요.')
         return

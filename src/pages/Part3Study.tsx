@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { DoneButton, PageHeader, PairLine, Section, SpeakButton, Toggle, VideoButton } from '../components/ui'
+import { DoneButton, PageHeader, PairLine, Section, SpeakButton, Toggle, VideoButton, PartIntro } from '../components/ui'
+import { PARTS } from '../data/exam'
 import { VIDEOS } from '../data/videos'
 import { part3Combos, part3QuestionTypes, part3Tenses, part3Topics } from '../data/study'
 import { useDone } from '../lib/storage'
@@ -11,6 +12,7 @@ export default function Part3Study() {
   return (
     <>
       <PageHeader title="Part 3 · 질문에 답하기" sub="준비 각 3초 · 답변 15초 / 15초 / 30초" back="/study" />
+      <PartIntro text={PARTS.find((x) => x.part === 3)!.bookIntro} />
 
       <Section title="빈출 질문 유형과 답변 어순">
         <p className="muted small" style={{ marginTop: 0 }}>

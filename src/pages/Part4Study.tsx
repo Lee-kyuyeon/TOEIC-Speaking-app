@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import InfoTable from '../components/InfoTable'
-import { DoneButton, PageHeader, PairLine, Section, SpeakButton, Toggle, VideoButton } from '../components/ui'
+import { DoneButton, PageHeader, PairLine, Section, SpeakButton, Toggle, VideoButton, PartIntro } from '../components/ui'
+import { PARTS } from '../data/exam'
 import { VIDEOS } from '../data/videos'
 import { monthsAndDates, part4CommonMistake, part4KeyPhrases, part4TableTypes, part4Prepositions, part4QuestionPatterns, part4Sets } from '../data/study'
 import { useDone } from '../lib/storage'
@@ -16,6 +17,7 @@ export default function Part4Study() {
   return (
     <>
       <PageHeader title="Part 4 · 표 보고 질문에 답하기" sub="표 읽기 45초 · 준비 각 3초 · 답변 15초 / 15초 / 30초 (Q10은 두 번 들려줌)" back="/study" />
+      <PartIntro text={PARTS.find((x) => x.part === 4)!.bookIntro} />
 
       <Section title="빈출 질문 유형">
         {part4QuestionPatterns.map((p) => (
