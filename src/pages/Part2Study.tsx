@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { DoneButton, PageHeader, PairLine, Section, Toggle } from '../components/ui'
+import { DoneButton, PageHeader, PairLine, Section, Toggle, VideoButton } from '../components/ui'
+import { VIDEOS } from '../data/videos'
 import { part2Expressions, part2Extra, part2Intro, part2Positions, part2Scenes, part2Template } from '../data/study'
 import { useDone } from '../lib/storage'
 
@@ -24,6 +25,9 @@ export default function Part2Study() {
               </li>
             ))}
           </ol>
+          <div className="btn-row">
+            <VideoButton video={VIDEOS.part2Basic} />
+          </div>
         </div>
       </Section>
 

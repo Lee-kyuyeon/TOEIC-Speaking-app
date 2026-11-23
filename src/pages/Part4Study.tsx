@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import InfoTable from '../components/InfoTable'
-import { DoneButton, PageHeader, PairLine, Section, SpeakButton, Toggle } from '../components/ui'
-import { monthsAndDates, part4KeyPhrases, part4Prepositions, part4QuestionPatterns, part4Sets } from '../data/study'
+import { DoneButton, PageHeader, PairLine, Section, SpeakButton, Toggle, VideoButton } from '../components/ui'
+import { VIDEOS } from '../data/videos'
+import { monthsAndDates, part4CommonMistake, part4KeyPhrases, part4TableTypes, part4Prepositions, part4QuestionPatterns, part4Sets } from '../data/study'
 import { useDone } from '../lib/storage'
 
 export default function Part4Study() {
@@ -30,9 +31,22 @@ export default function Part4Study() {
             </ul>
           </div>
         ))}
+        <div className="card">
+          <h3>학생들이 자주 틀리는 빈출 표현</h3>
+          <ul className="pairs">
+            <PairLine en={'Q. ' + part4CommonMistake.q} ko={part4CommonMistake.qKo} hideKo={!showKo} />
+            <PairLine en={'A. ' + part4CommonMistake.a} ko={part4CommonMistake.aKo} hideKo={!showKo} />
+          </ul>
+        </div>
       </Section>
 
       <Section title="기초 이론 · 전치사와 숫자">
+        <p className="muted small" style={{ marginTop: 0 }}>
+          표에는 항상 시간, 날짜, 주소, 금액 등의 숫자 정보가 등장합니다. 올바른 전치사를 사용하여 완전하고 정확한 답변을 하는 것이 중요합니다.
+        </p>
+        <div className="btn-row" style={{ marginTop: 0, marginBottom: 12 }}>
+          <VideoButton video={VIDEOS.part4Theory} />
+        </div>
         <div className="grid">
           {part4Prepositions.map((g) => (
             <div key={g.cat} className="card">
@@ -85,6 +99,15 @@ export default function Part4Study() {
           ))}
         </div>
 
+        {(() => {
+          const t = part4TableTypes.find((x) => x.sets.includes(set.id))
+          return t ? (
+            <p className="small" style={{ marginTop: 0 }}>
+              <span className="part-badge">{t.type}</span>
+              {t.desc}
+            </p>
+          ) : null
+        })()}
         <InfoTable set={set} />
 
         <details className="card">

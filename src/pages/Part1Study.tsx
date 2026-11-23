@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { DoneButton, PageHeader, Section, SpeakButton, Toggle } from '../components/ui'
+import { DoneButton, PageHeader, Section, SpeakButton, Toggle, VideoButton } from '../components/ui'
+import { VIDEOS } from '../data/videos'
 import { loanWords, minimalPairs, part1Passages, part1Tips, sameRootWords } from '../data/study'
 import { useDone } from '../lib/storage'
 
@@ -29,6 +30,9 @@ export default function Part1Study() {
       </Section>
 
       <Section title="기초 발음 연습">
+        <div className="btn-row" style={{ marginTop: 0, marginBottom: 12 }}>
+          <VideoButton video={VIDEOS.pronunciation} />
+        </div>
         {minimalPairs.map((m) => (
           <div key={m.sound} className="card">
             <h3>{m.sound}</h3>
@@ -79,6 +83,9 @@ export default function Part1Study() {
           </div>
         }
       >
+        <div className="btn-row" style={{ marginTop: 0, marginBottom: 12 }}>
+          <VideoButton video={VIDEOS.part1Guide} />
+        </div>
         <div className="seg" role="tablist">
           {['전체', ...cats].map((c) => (
             <button key={c} className={`chip ${c === cat ? 'on' : ''}`} onClick={() => setCat(c)} role="tab" aria-selected={c === cat}>

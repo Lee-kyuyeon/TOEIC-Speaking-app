@@ -106,7 +106,9 @@ export const part2Expressions: { title: string; items: Pair[] }[] = [
     items: [
       { en: 'a chair → some chairs, many chairs', ko: '셀 수 있는 명사' },
       { en: 'a child → several children / one woman → two women', ko: '불규칙 복수형 주의' },
+      { en: 'a person → some people', ko: '불규칙 복수형 주의' },
       { en: 'furniture, some bread, some fruit, some grass', ko: '셀 수 없는 명사 (a 붙이지 않기)' },
+      { en: 'some furniture', ko: '약간의 가구 (furniture는 세상의 모든 가구)' },
     ],
   },
   {
@@ -124,8 +126,10 @@ export const part2Expressions: { title: string; items: Pair[] }[] = [
     title: '느낌 표현 (Level up)',
     items: [
       { en: 'The street looks crowded. / People look happy.', ko: '주어 + look + 형용사' },
+      { en: 'It looks like people are moving into a new place.', ko: 'It looks like + 주어 + 동사' },
       { en: 'It looks like they are having a good time.', ko: 'It looks like + 주어 + 동사' },
       { en: 'It seems like he is choosing a book.', ko: 'It seems like + 주어 + 동사' },
+      { en: 'It seems like this picture was taken at a hot restaurant.', ko: 'It seems like + 주어 + 동사' },
     ],
   },
 ]
@@ -199,7 +203,16 @@ export const part2Extra: { title: string; image: string; sentences: Pair[] }[] =
 ]
 
 /* ---------------- Part 3 ---------------- */
-export interface QuestionType { type: string; pattern: string; example: string; exampleKo: string; answer: string; answerKo: string }
+export interface QuestionType {
+  type: string
+  pattern: string
+  example: string
+  exampleKo: string
+  answer: string
+  answerKo: string
+  /** 교재의 추가 예문·어휘 */
+  more?: Pair[]
+}
 
 export const part3QuestionTypes: QuestionType[] = [
   {
@@ -208,7 +221,11 @@ export const part3QuestionTypes: QuestionType[] = [
     example: 'What time of day do you think is the best for picnics? Why?',
     exampleKo: '하루 중 언제가 소풍을 즐기기에 좋은가요? 왜?',
     answer: 'I think afternoon is the best for picnics because the weather is mild. It is great for outdoor activities.',
-    answerKo: '오후가 소풍을 즐기기에 가장 좋은 것 같습니다. 날씨가 온화하고 야외 활동하기에 좋습니다.',
+    answerKo: '제 생각에 오후가 소풍을 즐기기에 가장 좋은 것 같습니다. 날씨가 온화하고 야외 활동하기에 좋습니다.',
+    more: [
+      { en: 'What time of the day ~ ? → in the morning / afternoon / evening, at night', ko: '하루 중 어느 때 ~' },
+      { en: 'What time of the year ~ ? → in + 계절 / 달', ko: '일 년 중 어느 때 ~' },
+    ],
   },
   {
     type: 'When was the last time ~?',
@@ -225,6 +242,10 @@ export const part3QuestionTypes: QuestionType[] = [
     exampleKo: '언제 마지막으로 자판기에서 무엇을 구매하였나요? 어디에 있었나요?',
     answer: 'The last time I bought something from a vending machine was 2 weeks ago. It was located at school.',
     answerKo: '가장 마지막으로 자판기에서 구매한 것은 2주 전입니다. 학교 건물에 있었습니다.',
+    more: [
+      { en: 'It was located on a street.', ko: '그것은 길에 있었습니다.' },
+      { en: 'It was located at school.', ko: '그것은 학교 건물에 있었습니다.' },
+    ],
   },
   {
     type: 'What kind(s) of ~?',
@@ -233,6 +254,12 @@ export const part3QuestionTypes: QuestionType[] = [
     exampleKo: '어떤 종류의 축제였나요?',
     answer: 'It was a cherry blossom festival.',
     answerKo: '벚꽃 축제였어요.',
+    more: [
+      { en: 'What kind of TV program → news programs, dramas, comedy shows, variety shows', ko: 'TV 프로그램 종류' },
+      { en: 'What kind of movie → action movies, sci-fi movies, romance movies', ko: '영화 종류' },
+      { en: 'What kind of gift → a cake, a coupon, candles, a book, a gift certificate', ko: '선물 종류' },
+      { en: 'What kind of food → Korean food, fast food, Chinese food, pizza', ko: '음식 종류' },
+    ],
   },
   {
     type: 'Who do you ~ with?',
@@ -249,6 +276,10 @@ export const part3QuestionTypes: QuestionType[] = [
     exampleKo: '얼마나 자주 영화를 보기 위해 스트리밍 서비스를 이용하나요?',
     answer: 'I use a streaming service from time to time to watch a movie.',
     answerKo: '영화를 보기 위해 스트리밍 서비스를 가끔 이용합니다.',
+    more: [
+      { en: 'once a week / twice a week / three times a week', ko: '일주일에 한 번 / 두 번 / 세 번' },
+      { en: 'from time to time', ko: '가끔' },
+    ],
   },
   {
     type: 'How many ~?',
@@ -273,6 +304,10 @@ export const part3QuestionTypes: QuestionType[] = [
     exampleKo: '아파트에 사나요, 주택에 사나요? 지금 집에 얼마나 오래 살았나요?',
     answer: 'I live in an apartment. I have lived in my current home for 3 years.',
     answerKo: '아파트에 살고 있어요. 현재 집에서 3년째 거주 중입니다.',
+    more: [
+      { en: 'I watch TV for an hour every day.', ko: '매일 하루에 한 시간 동안 TV를 봅니다. (주어 + 동사 + for 기간)' },
+      { en: 'I spend one hour watching TV every day.', ko: '매일 TV를 보느라 1시간 정도를 씁니다. (*주의할 어순: 주어 + spend + 시간 + 동사ing)' },
+    ],
   },
   {
     type: 'How do you find out ~?',
@@ -281,6 +316,9 @@ export const part3QuestionTypes: QuestionType[] = [
     exampleKo: '동네에 새로운 신발 가게를 어떻게 알게 되나요? 왜?',
     answer: 'I can find out about new shoe stores in my area by looking at the posters. A lot of posters are displayed on streets.',
     answerKo: '포스터를 보며 알게 됩니다. 많은 포스터가 길에 붙어 있어요.',
+    more: [
+      { en: 'by using the internet', ko: '인터넷을 이용함으로써' },
+    ],
   },
   {
     type: 'Would you ~? (가정법)',
@@ -289,6 +327,9 @@ export const part3QuestionTypes: QuestionType[] = [
     exampleKo: '아침 일찍 일하고 싶나요, 밤늦게 일하고 싶나요? 왜?',
     answer: 'I would rather work early in the day because I want to get some rest in the evening.',
     answerKo: '아침 일찍 일하고 싶어요. 저녁에는 휴식을 취하고 싶기 때문입니다.',
+    more: [
+      { en: 'Would you V, if S Ved? (가정법 현재)', ko: '만약 ~라면 ~하고 싶어? — 답변에서 would를 활용하는 것이 중요!' },
+    ],
   },
 ]
 
@@ -361,6 +402,23 @@ export const part4Prepositions = [
   { cat: '인물 소개', items: ['by 발표자 / with 같이 회의·식사하는 사람', 'by Maria Kim, the manager', 'by Maria Kim from marketing department', 'by Maria Kim, the manager of ABC hotel'] },
 ]
 
+/** 교재 '학생들이 자주 틀리는 빈출 표현 정리' */
+export const part4CommonMistake = {
+  q: "I don't think I can arrive until 9 a.m. What will I miss?",
+  qKo: '아무래도 9시 이전에 도착은 못 할 것 같아요. 무엇을 놓치게 될까요?',
+  a: "Well, don't worry. The meeting will start at 10 a.m.",
+  aKo: '걱정하지 마세요. 회의는 오전 10시에 시작합니다.',
+}
+
+/** 표 유형별 교재 분류 */
+export const part4TableTypes = [
+  { type: '단체 행사 표', desc: 'Conference / Workshop / Seminar / Event (회의 / 워크숍 / 세미나 / 이벤트)', sets: [1, 2, 3] },
+  { type: '인터뷰 일정', desc: 'there will be an interview with 지원자 for a ___ position', sets: [4] },
+  { type: '투어 일정', desc: 'You will go on a tour of 장소.', sets: [5] },
+  { type: '개인 일정', desc: '한 사람의 개인 일정', sets: [6] },
+  { type: '직원 회의', desc: '발표자 소개: by 이름 in the ___ department / team', sets: [7] },
+]
+
 export const part4KeyPhrases: Pair[] = [
   { en: 'take place (= be held)', ko: '개최되다, 열리다' },
   { en: 'There will be ~', ko: '~가 있을 예정입니다' },
@@ -369,6 +427,10 @@ export const part4KeyPhrases: Pair[] = [
   { en: "Well, don't worry. / No worries.", ko: '걱정하지 마세요.' },
   { en: 'Sure thing. There are two sessions scheduled. Firstly, ~ Secondly, ~', ko: '물론입니다. 두 가지 일정이 있습니다. 첫째로 ~ 둘째로 ~' },
   { en: 'there will be an interview with 지원자 for a ___ position', ko: '~ 자리에 지원한 ~와의 면접이 있을 예정입니다' },
+  { en: 'specialize in ~', ko: '~를 전문으로 한다' },
+  { en: 'be working for ~', ko: '~에 종사 중입니다' },
+  { en: 'be from 소속 기관', ko: '현재 ~에 소속되어 있습니다' },
+  { en: 'by ~', ko: '~에 의해 (발표자)' },
   { en: 'You will go on a tour of 장소', ko: '~로 견학을 가게 될 것입니다' },
 ]
 

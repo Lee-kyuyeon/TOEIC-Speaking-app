@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
 import { useDone, useHistory, useStored } from '../lib/storage'
 import { dday, fmt, parseDate } from '../lib/dates'
+import { VideoButton } from '../components/ui'
+import { VIDEOS } from '../data/videos'
 import { DEFAULT_PLAN, TOTALS, type ExamPlan } from '../lib/plan'
 
 export default function Home() {
@@ -105,8 +107,11 @@ export default function Home() {
           <ol className="list-plain">
             <li>자신감 있는 목소리로 연습하기</li>
             <li>필수 문장 완벽 암기하기</li>
-            <li>실전 모의고사 훈련하기</li>
+            <li>유튜브 실전 모의고사 훈련하기</li>
           </ol>
+          <div className="btn-row">
+            <VideoButton video={VIDEOS.channel} />
+          </div>
         </div>
       </section>
 

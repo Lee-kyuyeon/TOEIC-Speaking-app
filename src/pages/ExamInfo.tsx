@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import { PageHeader, Section, Notice } from '../components/ui'
+import { PageHeader, Section, Notice, VideoButton } from '../components/ui'
+import { VIDEOS } from '../data/videos'
 import { CHANGES_2022, EXAM_FACTS, EXAM_RULES, LEVELS, LEVEL_DESCRIPTIONS, OFFICIAL_LINKS, PARTS } from '../data/exam'
 
 export default function ExamInfo() {
@@ -66,13 +67,28 @@ export default function ExamInfo() {
               <p className="small">
                 <b>평가 기준</b> · {p.criteria}
               </p>
-              <div className="chips">
-                {p.topics.map((t) => (
-                  <span key={t} className="chip">
-                    {t}
-                  </span>
-                ))}
-              </div>
+              <h3 className="small" style={{ margin: '12px 0 6px' }}>
+                주제별 종류
+              </h3>
+              {p.topics.map((g, i) => (
+                <div key={g.group ?? i} style={{ display: 'flex', gap: 8, alignItems: 'baseline', marginBottom: 6, flexWrap: 'wrap' }}>
+                  {g.group && <b className="small" style={{ minWidth: 104 }}>{g.group}</b>}
+                  <div className="chips">
+                    {g.items.map((t) => (
+                      <span key={t} className="chip">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+              {p.notes && (
+                <ul className="list-plain small" style={{ marginTop: 8 }}>
+                  {p.notes.map((n) => (
+                    <li key={n}>{n}</li>
+                  ))}
+                </ul>
+              )}
               <div className="btn-row">
                 <Link className="btn sm outline" to={`/study/part${p.part}`}>
                   Part {p.part} 학습하기
@@ -132,6 +148,9 @@ export default function ExamInfo() {
               <li key={r}>{r}</li>
             ))}
           </ul>
+          <div className="btn-row">
+            <VideoButton video={VIDEOS.examCenter} />
+          </div>
         </div>
         <div className="btn-row">
           <Link to="/register" className="btn">

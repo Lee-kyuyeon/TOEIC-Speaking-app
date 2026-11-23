@@ -85,3 +85,12 @@ export function DoneButton({ done, onToggle }: { done: boolean; onToggle: () => 
 export function Notice({ children, tone = 'info' }: { children: ReactNode; tone?: 'info' | 'warn' }) {
   return <div className={`notice ${tone}`}>{children}</div>
 }
+
+/** 교재 QR 코드의 강의 영상 링크 */
+export function VideoButton({ video }: { video: { title: string; url: string; page: number } }) {
+  return (
+    <a className="btn sm outline" href={video.url} target="_blank" rel="noreferrer" title={`교재 ${video.page}쪽 QR 코드`}>
+      ▶ {video.title} ↗
+    </a>
+  )
+}

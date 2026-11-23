@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { DoneButton, PageHeader, PairLine, Section, SpeakButton, Toggle } from '../components/ui'
+import { DoneButton, PageHeader, PairLine, Section, SpeakButton, Toggle, VideoButton } from '../components/ui'
+import { VIDEOS } from '../data/videos'
 import { part3Combos, part3QuestionTypes, part3Tenses, part3Topics } from '../data/study'
 import { useDone } from '../lib/storage'
 
@@ -12,6 +13,12 @@ export default function Part3Study() {
       <PageHeader title="Part 3 · 질문에 답하기" sub="준비 각 3초 · 답변 15초 / 15초 / 30초" back="/study" />
 
       <Section title="빈출 질문 유형과 답변 어순">
+        <p className="muted small" style={{ marginTop: 0 }}>
+          화면에 문제가 제시되므로 의문사를 정확하게 파악하는 것이 중요합니다. 질문하는 이의 의도에 맞는 답변을 하세요.
+        </p>
+        <div className="btn-row" style={{ marginTop: 0, marginBottom: 12 }}>
+          <VideoButton video={VIDEOS.part3Grammar} />
+        </div>
         {part3QuestionTypes.map((q) => (
           <details key={q.type} className="card">
             <summary>{q.type}</summary>
@@ -21,6 +28,9 @@ export default function Part3Study() {
             <ul className="pairs">
               <PairLine en={'Q. ' + q.example} ko={q.exampleKo} hideKo={!showKo} />
               <PairLine en={'A. ' + q.answer} ko={q.answerKo} hideKo={!showKo} />
+              {q.more?.map((m) => (
+                <PairLine key={m.en} en={m.en} ko={m.ko} hideKo={!showKo} />
+              ))}
             </ul>
           </details>
         ))}
